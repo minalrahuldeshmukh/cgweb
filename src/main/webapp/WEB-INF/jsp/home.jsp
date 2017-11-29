@@ -68,6 +68,13 @@
 			color: darkgreen;
 			text-decoration: none;
 		}
+		.textfont {
+        			color: darkgreen;
+        			text-decoration: none;
+        		}
+        .textfont bold {
+        
+        }
 
 		/*IE6 fix*/
 		* html body{
@@ -106,7 +113,7 @@ div.tab button:hover {
 
 /* Create an active/current tablink class */
 div.tab button.active {
-    background-color: #ccc;
+    background-color: #BCCE98;
 }
 
 /* Style the tab content */
@@ -121,7 +128,7 @@ div.tab button.active {
 .tabtwo{
 }
 .typeButton {
-    background-color: ##BCCE98;
+    background-color: #BCCE98;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -182,24 +189,29 @@ $(document).ready(function() {
                       bunchtableHtml = "<ul> <li>"+ $("#tab1").val()+"</li>  <li>"+$("#tab2").val()+"</li> <li>"+$("#tab3").val()+"</li></ul> ";
                       $("#arctable").html(bunchtableHtml);
                       $("#rettable").html(bunchtableHtml);
+                       $("#arctable").show();
+                       $("#rettable").show();
                     }
                      else if(target.is(".tabtwo")) {
                        bunchtableHtml = "<ul> <li>"+ $("#tab1").val()+"</li>  <li>"+$("#tab2").val()+"</li> <li>"+$("#tab3").val()+"</li><li>"+$("#tab4").val()+"</li></ul> ";
                         $("#arctable").html(bunchtableHtml);
                         $("#rettable").html(bunchtableHtml);
+                         $("#rettable").show();
+                         $("#arctable").show();
                      }
                      else if(target.is("#archivetab")) {
                             $(".result").hide();
-                              $(".#rettable").hide();
+
                      }
                      else if(target.is("#retrievetab")) {
                                                  $(".result").hide();
-                                                   $("#arctable").hide();
+
                      }
                      else if(target.is("#retrieveBut")) {
                             startDate = $("#arcmeetingstart").val();
                             endDate=    $("#aremeetingend").val();
                             datasetname = "TRADE";
+                            var  bunchHtml;
                             // call rest
                             var data = 'datasetname='+ encodeURIComponent(datasetname);
                             //var baseURL = "url/"+startDate+"/"+endDate+"/"+scriptType+"/"+datasetname;
@@ -209,18 +221,33 @@ $(document).ready(function() {
                                 data : data,
                                 error : function(xhr) {
                                 if(xhr.status!=200){
-                                bunchHtml ="<h1>Error in data retrieval </h1> "  ;
-                                $(".result").html(bunchHtml);
-                                }
-                                }
+                                         bunchHtml ="<h1>Error in data retrieval </h1> "  ;
+                                         $(".result").html(bunchHtml);
+                                     }
+                                    }
                             }).then(function(response) {
                                 alert( response );
                                 alert(response.status)
-                                bunchHtml =  "<tr><th>DataSet Name</th><th>File Name</th><th>Download</th><th>Start Date</th><th>End Date</th></tr>"
-                                $(".result").html(bunchHtml);
-                                $(".result").show();
-                                response.
+                                bunchHtml =  " <table id='retdata'><tr><th>DataSet Name</th><th>Archival Id</th><th>File Name</th><th>Start Date</th><th>End Date</th><th>Download</th></tr>"  ;
+
+
+                               if(response.archiveRecList!=""){
+                                alert( "1"+response.archiveRecList );
+                                 $.each(response.archiveRecList,function(i,archivedRecord){
+                                  alert( "2"+archivedRecord.dataSetName );
+                                   bunchHtml +="<tr><td>"+archivedRecord.dataSetName+"</td>"+
+                                   "<td>"+archivedRecord.archiveSystemId+"</td>"+
+                                   "<td>"+archivedRecord.fileFullName+"</td>"+
+                                   "<td>"+archivedRecord.startDate+"</td>"+
+                                   "<td>"+archivedRecord.endDate+"</td>"+
+                                   "<td><button  onclick='' >Download Object</button> </td></tr>";
+                                   });
+                                   bunchHtml += "</table>";
+                                   $(".result").html(bunchHtml);
+                                   $(".result").show();
+                               }
                             });
+                           // $(".result").append(bunchHtml)   ;
                       }
                      else if(target.is("#archiveBut")) {
                          startDate = $("#arcmeetingstart").val();
@@ -275,11 +302,11 @@ $(document).ready(function() {
 
     <div class="tabcontent" id="archive">
         <h1>Archive Data</h1>
-        <div id="arctable" >
+        <div id="arctable" class="textfont" >
         </div>
-        <label for="arcmeetingstart">Start Date : </label><input id="arcmeetingstart" type="date" value="2011-01-13"/>
-        <label for="aremeetingend">End Date : </label><input id="aremeetingend" type="date" value="2011-01-13"/>
-        <input type="checkbox" name="ddl" value="DDL" id="scripttype"> DDL?
+        <label for="arcmeetingstart" class="textfont">Start Date : </label><input id="arcmeetingstart" type="date" value="2017-11-29"/>
+        <label for="aremeetingend" class="textfont" >End Date : </label><input id="aremeetingend" type="date" value="2017-11-29"/>
+        <input type="checkbox" name="ddl" value="DDL" id="scripttype" class="textfont"> DDL?
         <br>
         <br>
 
@@ -290,7 +317,7 @@ $(document).ready(function() {
     </div>
     <div class="tabcontent" id="retrieve">
         <h1>Retrieve Data</h1>
-        <div id="rettable" >
+        <div id="rettable" class="textfont" >
 
         </div>
         <label for="retmeetingstart">Start Date : </label>
@@ -300,10 +327,11 @@ $(document).ready(function() {
         <br>
         <br>
          <button class="typeButton" id="retrieveBut">Retrieve</button>
+          <br>
+          <br>
            <div style="display:none;" class="result">
-                   <table id="retdata">
 
-                   </table>
+
 
            </div>
     </div>

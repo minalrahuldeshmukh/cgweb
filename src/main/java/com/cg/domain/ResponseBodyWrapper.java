@@ -8,6 +8,7 @@ import java.util.List;
 
 public class ResponseBodyWrapper implements Serializable {
     List<DataSet> dataSetList= new ArrayList();
+    List<ArchivedRecord> archiveRecList= new ArrayList();
     String status ;
 
     public List<DataSet> getDataSetList() {
@@ -24,5 +25,13 @@ public class ResponseBodyWrapper implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<ArchivedRecord> getArchiveRecList() {
+        return archiveRecList;
+    }
+
+    public void setArchiveRecList(List<ArchivedRecord> archiveRecList) {
+        this.archiveRecList = archiveRecList;
     }
 }
