@@ -16,37 +16,17 @@
 
 package com.cg.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.cg.domain.ArchivedRecord;
-import com.cg.domain.ResponseBodyWrapper;
-import com.cg.domain.DataSet;
-import com.cg.domain.DataSetType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.Map;
 
 @Controller
 public class HomeController {
+
 	@GetMapping("/")
 	public String welcome(Map<String, Object> model) {
 		return "home";
 	}
-	@ResponseBody
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public ResponseBodyWrapper home(@RequestParam String datasetname) {
-		ResponseBodyWrapper responseBodyWrapper = new ResponseBodyWrapper();
-		responseBodyWrapper.setStatus("SUCCESS");
 
-		ArchivedRecord archiveset = new ArchivedRecord();
-		archiveset.setArchiveSystemId("1");
-		archiveset.setDataSetName("TRADE");
-		List<ArchivedRecord> archiveRecList   = new ArrayList<ArchivedRecord>();
-		archiveRecList.add(archiveset);
-		responseBodyWrapper.setArchiveRecList(archiveRecList);
-		return responseBodyWrapper ;
-	}
 }

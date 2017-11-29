@@ -208,9 +208,7 @@ $(document).ready(function() {
                      }
                       else if(target.is("#restoreobj")) {
                          archivalSystemID = $("#restoreobj").val();
-                         alert(archivalSystemID);
-                         var data = 'archivalSystemID='+ encodeURIComponent(archivalSystemID);
-                         var baseURL = "/home1";
+                        var baseURL = "http://localhost:8090/retrieveDataSet/archivalSystemID";
                              $.ajax({
                                 url : baseURL,
                                 data : data,
@@ -228,14 +226,14 @@ $(document).ready(function() {
                      else if(target.is("#retrieveBut")) {
                             startDate = $("#arcmeetingstart").val();
                             endDate=    $("#aremeetingend").val();
-                            datasetname = "TRADE";
+                            datasetname = "DataSet1";
                             var  bunchHtml;
                             // call rest
                             var data = 'datasetname='+ encodeURIComponent(datasetname);
                             //var baseURL = "url/"+startDate+"/"+endDate+"/"+scriptType+"/"+datasetname;
                             var baseURL = "/home";
                             $.ajax({
-                                url : baseURL,
+                                url : "http://localhost:8090/getArchivedRecords",
                                 data : data,
                                 error : function(xhr) {
                                 if(xhr.status!=200){
@@ -244,23 +242,17 @@ $(document).ready(function() {
                                      }
                                     }
                             }).then(function(response) {
-                                alert( response );
-                                alert(response.status)
-                                bunchHtml =  " <table id='retdata'><tr><th>DataSet Name</th><th>Archival Id</th><th>File Name</th><th>Start Date</th><th>End Date</th><th>Download</th></tr>"  ;
+                                 bunchHtml =  " <table id='retdata'><tr><th>DataSet Name</th><th>Archival Id</th><th>Start Date</th><th>End Date</th><th>Download</th></tr>"  ;
 
+                               if(response != undefined){
+                                  $.each(response,function(i,archivedRecord){
+                                           bunchHtml +="<tr><td>"+archivedRecord.dataSetName+"</td>"+
+                                           "<td>"+archivedRecord.archiveSystemId+"</td>"+
+                                           "<td>"+new Date(archivedRecord.startDate)+"</td>"+
+                                           "<td>"+new Date(archivedRecord.endDate)+"</td>"+
+                                            "<td><button id='restoreobj' value = "+archivedRecord.archiveSystemId+">Restore Object</button> </td></tr>";
+                                 });
 
-                               if(response.archiveRecList!=""){
-                                alert( "1"+response.archiveRecList );
-                                 $.each(response.archiveRecList,function(i,archivedRecord){
-                                  alert( "2"+archivedRecord.dataSetName );
-                                   bunchHtml +="<tr><td>"+archivedRecord.dataSetName+"</td>"+
-                                   "<td>"+archivedRecord.archiveSystemId+"</td>"+
-                                   "<td>"+archivedRecord.fileFullName+"</td>"+
-                                   "<td>"+archivedRecord.startDate+"</td>"+
-                                   "<td>"+archivedRecord.endDate+"</td>"+
-                                   "<td><button id='restoreobj' value = "+archivedRecord.archiveSystemId+">Restore Object</button> </td></tr>";
-
-                                   });
                                    bunchHtml += "</table>";
                                    $(".result").html(bunchHtml);
                                    $(".result").show();
@@ -272,16 +264,11 @@ $(document).ready(function() {
                          startDate = $("#arcmeetingstart").val();
                          endDate=    $("#aremeetingend").val();
                          scriptType = $("#scripttype").val();
-                         datasetname = "TRADE";
-                              // call rest
-                              var data = 'datasetname='
-                                                  + encodeURIComponent(datasetname);
+                         datasetname = "DataSet1";
 
-                             //var baseURL = "url/"+startDate+"/"+endDate+"/"+scriptType+"/"+datasetname;
-                             var baseURL = "/home";
+                             var baseURL = "http://localhost:8090/archiveDataSet/" + datasetname +"/" +startDate + "/" + endDate + "/"+ scriptType ;
                              $.ajax({
                                 url : baseURL,
-                                data : data,
                                 error : function(xhr) {
                                         if(xhr.status!=200){
                                           bunchHtml ="<h1>Error in data archival </h1> "  ;
@@ -289,8 +276,7 @@ $(document).ready(function() {
                                         }
                                 }
                               }).then(function(response) {
-                                    alert( response );
-                                    alert(response.status)
+
                                     bunchHtml ="<h1>Dataset has been successfully uploaded </h1> "  ;
 
                                     $(".result").html(bunchHtml);
@@ -337,9 +323,9 @@ $(document).ready(function() {
 
         </div>
         <label for="retmeetingstart">Start Date : </label>
-        <input id="retmeetingstart" type="date" value="2011-01-13"/>
+        <input id="retmeetingstart" type="date" value="2017-11-01"/>
         <label for="retmeetingend">End Date : </label>
-        <input id="retmeetingend" type="date" value="2011-01-13"/>
+        <input id="retmeetingend" type="date" value="2017-11-30"/>
         <br>
         <br>
          <button class="typeButton" id="retrieveBut">Retrieve</button>
