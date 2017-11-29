@@ -160,11 +160,12 @@ div.tab button.active {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #4CAF50;
+    background-color:#BCCE98;
     color: white;
 }
 </style>
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
     function openType(evt, dataName) {
         var i, tabcontent, tablinks;
@@ -201,11 +202,28 @@ $(document).ready(function() {
                      }
                      else if(target.is("#archivetab")) {
                             $(".result").hide();
-
                      }
                      else if(target.is("#retrievetab")) {
-                                                 $(".result").hide();
-
+                            $(".result").hide();
+                     }
+                      else if(target.is("#restoreobj")) {
+                         archivalSystemID = $("#restoreobj").val();
+                         alert(archivalSystemID);
+                         var data = 'archivalSystemID='+ encodeURIComponent(archivalSystemID);
+                         var baseURL = "/home1";
+                             $.ajax({
+                                url : baseURL,
+                                data : data,
+                                error : function(xhr) {
+                                        if(xhr.status!=200){
+                                          bunchHtml ="<h1>Error in data archival </h1> "  ;
+                                          $(".result").html(bunchHtml);
+                                        }
+                                }
+                              }).then(function(response) {
+                                      bunchHtml ="<h1>Dataset has been successfully uploaded </h1> "  ;
+                                      alert(bunchHtml);
+                               });
                      }
                      else if(target.is("#retrieveBut")) {
                             startDate = $("#arcmeetingstart").val();
@@ -240,7 +258,8 @@ $(document).ready(function() {
                                    "<td>"+archivedRecord.fileFullName+"</td>"+
                                    "<td>"+archivedRecord.startDate+"</td>"+
                                    "<td>"+archivedRecord.endDate+"</td>"+
-                                   "<td><button  onclick='' >Download Object</button> </td></tr>";
+                                   "<td><button id='restoreobj' value = "+archivedRecord.archiveSystemId+">Restore Object</button> </td></tr>";
+
                                    });
                                    bunchHtml += "</table>";
                                    $(".result").html(bunchHtml);
@@ -296,10 +315,7 @@ $(document).ready(function() {
     <div class="tab">
         <button class="tablinks" onclick="openType(event, 'archive')" id="archivetab">Archive</button>
         <button class="tablinks" onclick="openType(event, 'retrieve')" id="retrievetab">Retrieve</button>
-
     </div>
-
-
     <div class="tabcontent" id="archive">
         <h1>Archive Data</h1>
         <div id="arctable" class="textfont" >
@@ -330,9 +346,6 @@ $(document).ready(function() {
           <br>
           <br>
            <div style="display:none;" class="result">
-
-
-
            </div>
     </div>
 </main>
@@ -351,5 +364,9 @@ $(document).ready(function() {
 
     </div>
 </nav>
+
+<div id="dialog" style="display: none" align = "center">
+
+</div>
 </body>
 </html>
